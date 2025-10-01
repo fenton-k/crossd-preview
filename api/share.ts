@@ -1,7 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-
 export const config = {
-  runtime: "edge", // Use Vercel Edge Functions for fast preview handling
+  runtime: "edge",
 };
 
 function formatTime(seconds: number): string {
@@ -10,8 +8,8 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
-export default async function handler(req: NextRequest) {
-  const url = new URL(req.url);
+export default async function handler(request: Request): Promise<Response> {
+  const url = new URL(request.url);
   const tParam = url.searchParams.get("t");
   const timeSeconds = parseInt(tParam || "0", 10);
   const timeFormatted = formatTime(timeSeconds);
@@ -19,15 +17,14 @@ export default async function handler(req: NextRequest) {
   const ogTitle = `You beat the San Fran divides in ${timeFormatted}!`;
   const gameUrl = `https://fenton-k.github.io/crossd/?t=${timeSeconds}`;
 
-  // Serve OG HTML for bots (like iMessage, Twitter)
-  const userAgent = req.headers.get("user-agent") || "";
+  const userAgent = request.headers.get("user-agent") || "";
   const isBot =
     /bot|crawl|spider|twitter|facebook|embed|slack|discord|WhatsApp|iMessage/i.test(
       userAgent
     );
 
   if (!isBot) {
-    return NextResponse.redirect(gameUrl);
+    return Response.redirect(gameUrl, 302);
   }
 
   const html = `
@@ -52,7 +49,7 @@ export default async function handler(req: NextRequest) {
     </html>
   `;
 
-  return new NextResponse(html, {
+  return new Response(html, {
     headers: {
       "Content-Type": "text/html",
     },
