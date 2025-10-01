@@ -14,7 +14,7 @@ export default async function handler(request: Request): Promise<Response> {
   const timeSeconds = parseInt(tParam || "0", 10);
   const timeFormatted = formatTime(timeSeconds);
 
-  const ogTitle = `You beat the San Fran divides in ${timeFormatted}!`;
+  const ogTitle = `I beat the San Fran Divides in ${timeFormatted}!`;
   const gameUrl = `https://fenton-k.github.io/crossd/?t=${timeSeconds}`;
 
   const userAgent = request.headers.get("user-agent") || "";
@@ -37,7 +37,7 @@ export default async function handler(request: Request): Promise<Response> {
       <meta property="og:url" content="${gameUrl}" />
       <meta property="og:type" content="website" />
       <meta name="twitter:card" content="summary_large_image" />
-      <meta property="og:image" content="https://yourdomain.com/default-og-image.png" />
+      <meta property="og:image" content="https://fenton-k.github.io/crossd/logo.png" />
       <title>${ogTitle}</title>
     </head>
     <body>
